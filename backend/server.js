@@ -10,19 +10,5 @@ const main = async () => {
     console.log("Server is running at port: " + PORT);
   });
 };
-// api.listen(PORT, (err) => {
-//   if (err) {
-//     console.log("Error:", err);
-//   }
-//   console.log("Server is running at port: " + PORT);
-// });
-// console.log(connectionDB())
-
-// if (connectionDB) {
-//     console.log("sim")
-// }
-// else {
-//     console.log("não")
-// }
-// console.log(connectionDB());
+//start
 main()

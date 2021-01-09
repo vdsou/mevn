@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const model = mongoose.Model;
+const model = mongoose.model;
 const wordsSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   word: String,

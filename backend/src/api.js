@@ -2,11 +2,11 @@ const express = require("express");
 const api = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const morgan = require("morgan");
+const logger = require("morgan");
 const index = require("./routes/index");
 const connectionDB = require("./config/db")
 api.use(cors());
-api.use(morgan("dev"));
+api.use(logger("dev"));
 api.use(bodyParser.urlencoded({ extended: true }));
 api.use(bodyParser.json());
 

@@ -7,9 +7,8 @@ router.get("/getall", wordsControoler.getAllWords);
 
 router.post("/insert", wordsControoler.insertWord);
 
-router.get("/get/:word", (req, res) => {
-  res.status(200).json({ message: "find a word" });
-});
+router.get("/get/:word", wordsControoler.getWord);
+
 router.patch("/update/:id", wordsControoler.updateWord);
 
 router.delete("/delete/:id", wordsControoler.deleteWord);

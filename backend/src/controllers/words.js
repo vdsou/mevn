@@ -22,6 +22,27 @@ exports.getAllWords = (req, res) => {
     });
 };
 
+exports.getWord = (req, res) => {
+  const word = req.params.word;
+  Words.find({ word })
+    .exec()
+    .then((result) => {
+      res.status(200).json({
+        message: "get word",
+        success: true,
+        result,
+      });
+    })
+    .catch((err) => {
+      console.log("Error:", err);
+      res.status(500).json({
+        message: "get word",
+        success: false,
+        error: err,
+      });
+    });
+};
+
 exports.insertWord = (req, res) => {
   const word = req.body.word.toString();
   const meaning = req.body.meaning.toString();
@@ -53,13 +74,13 @@ exports.insertWord = (req, res) => {
 
 exports.updateWord = (req, res) => {
   const id = req.params.id;
-  const updates = {}
-  for (const key in req.body){
+  const updates = {};
+  for (const key in req.body) {
     if (req.body.hasOwnProperty(key)) {
-      updates[key] = req.body[key]
+      updates[key] = req.body[key];
     }
   }
-  Words.updateOne({ _id: id }, { $set: updates})
+  Words.updateOne({ _id: id }, { $set: updates })
     .exec()
     .then((result) => {
       res.status(200).json({

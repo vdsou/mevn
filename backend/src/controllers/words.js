@@ -27,7 +27,14 @@ exports.getWord = (req, res) => {
   Words.find({ word })
     .exec()
     .then((result) => {
-      res.status(200).json({
+      if (result.length == 0) {
+        return res.status(404).json({
+          message: "Word not found.",
+          success: false,
+          result,
+        });
+      }
+      return res.status(200).json({
         message: "get word",
         success: true,
         result,
@@ -35,7 +42,7 @@ exports.getWord = (req, res) => {
     })
     .catch((err) => {
       console.log("Error:", err);
-      res.status(500).json({
+      return res.status(500).json({
         message: "get word",
         success: false,
         error: err,
@@ -74,24 +81,43 @@ exports.insertWord = (req, res) => {
 
 exports.updateWord = (req, res) => {
   const id = req.params.id;
-  const updates = {};
-  for (const key in req.body) {
-    if (req.body.hasOwnProperty(key)) {
-      updates[key] = req.body[key];
-    }
-  }
-  Words.updateOne({ _id: id }, { $set: updates })
+
+  Words.find({ _id: id })
     .exec()
     .then((result) => {
-      res.status(200).json({
-        message: "update",
-        success: true,
-        result,
-      });
-    })
-    .catch((err) => {
+      if (result.length === 0 || !result) {
+        res.status(404).json({
+          message: "Not found",
+          success: false,
+        });
+      } else {
+        const updates = {};
+        for (const key in req.body) {
+          if (req.body.hasOwnProperty(key)) {
+            updates[key] = req.body[key];
+          }
+        }
+        Words.updateOne({ _id: id }, { $set: updates })
+          .exec()
+          .then((result) => {
+            return res.status(200).json({
+              message: "update",
+              success: true,
+              result,
+            });
+          })
+          .catch((err) => {
+            console.log("Error", err);
+            return res.status(500).json({
+              message: "update",
+              success: false,
+              error: err,
+            });
+          });
+      }
+    }).catch((err) => {
       console.log("Error", err);
-      res.status(500).json({
+      return res.status(500).json({
         message: "update",
         success: false,
         error: err,
@@ -101,10 +127,16 @@ exports.updateWord = (req, res) => {
 
 exports.deleteWord = (req, res) => {
   const id = req.params.id;
-  console.log(id);
   Words.findOneAndDelete({ _id: id })
     .exec()
     .then((result) => {
+      if (!result) {
+        res.status(404).json({
+          message: "Not found",
+          success: false,
+          deleted: result,
+        });  
+      }
       res.status(200).json({
         message: "delete",
         success: true,

@@ -10,6 +10,8 @@ const connectDB = async () => {
   const result = await mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
   });
   if (mongoose.connection.readyState === 1) {
     console.log("Database is connected.");

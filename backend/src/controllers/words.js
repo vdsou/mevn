@@ -3,6 +3,7 @@ const Words = require("../models/words");
 
 exports.getAllWords = (req, res) => {
   Words.find()
+    .select("id word meaning")
     .exec()
     .then((result) => {
       res.status(200).json({
@@ -25,6 +26,7 @@ exports.getAllWords = (req, res) => {
 exports.getWord = (req, res) => {
   const word = req.params.word;
   Words.find({ word })
+    .select("id word meaning")
     .exec()
     .then((result) => {
       if (result.length == 0) {
@@ -64,7 +66,9 @@ exports.insertWord = (req, res) => {
       res.status(201).json({
         message: "insert a word",
         success: true,
-        result,
+        id: result.id,
+        word: result.word,
+        meaning: result.meaning,
       });
     })
     .catch((err) => {
@@ -83,6 +87,7 @@ exports.updateWord = (req, res) => {
   const id = req.params.id;
 
   Words.find({ _id: id })
+    .select("id word meaning")
     .exec()
     .then((result) => {
       if (result.length === 0 || !result) {
@@ -103,7 +108,7 @@ exports.updateWord = (req, res) => {
             return res.status(200).json({
               message: "update",
               success: true,
-              result,
+              // result,
             });
           })
           .catch((err) => {
@@ -115,7 +120,8 @@ exports.updateWord = (req, res) => {
             });
           });
       }
-    }).catch((err) => {
+    })
+    .catch((err) => {
       console.log("Error", err);
       return res.status(500).json({
         message: "update",
@@ -128,6 +134,7 @@ exports.updateWord = (req, res) => {
 exports.deleteWord = (req, res) => {
   const id = req.params.id;
   Words.findOneAndDelete({ _id: id })
+    .select("id word meaning")
     .exec()
     .then((result) => {
       if (!result) {
@@ -135,7 +142,7 @@ exports.deleteWord = (req, res) => {
           message: "Not found",
           success: false,
           deleted: result,
-        });  
+        });
       }
       res.status(200).json({
         message: "delete",

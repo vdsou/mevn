@@ -9,8 +9,7 @@ router.post("/insert", userController.insertUser);
 router.get("/get/:id", userController.getUser);
 
 router.patch("/update/:id", userController.updateUser);
-router.delete("/delete/:id", (req, res) => {
-  res.status(200).json({ message: "delete a user" });
-});
+
+router.delete("/delete/:id", userController.deleteUser);
 
 module.exports = router;

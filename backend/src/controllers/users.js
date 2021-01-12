@@ -69,13 +69,13 @@ exports.getUser = (req, res) => {
     .exec()
     .then((result) => {
       if (result.length == 0) {
+        console.log("Error: user not found in the database");
         return res.status(404).json({
           message: "User not found",
           success: false,
           result,
         });
       } else {
-        console.log("Error: user not found in the database");
         return res.status(200).json({
           message: "get user",
           success: true,
@@ -105,13 +105,16 @@ exports.updateUser = (req, res) => {
   Users.findByIdAndUpdate({ _id: userId }, { $set: updates })
     .exec()
     .then((result) => {
-      if (result) {
-        res.status(200).json({
-          message: "update user",
-          success: true,
-          result,
+      if (!result) {
+        res.status(404).json({
+          message: "User not found",
         });
       }
+      res.status(200).json({
+        message: "update user",
+        success: true,
+        result,
+      });
     })
     .catch((err) => {
       console.log("Error", err);
@@ -119,6 +122,32 @@ exports.updateUser = (req, res) => {
         message: "update user",
         success: false,
         error: err,
+      });
+    });
+};
+
+exports.deleteUser = (req, res) => {
+  const userId = req.params.id;
+  Users.findOneAndDelete({ _id: userId })
+    .exec()
+    .then((result) => {
+      if (!result) {
+        res.status(404).json({
+          message: "User not found",
+        });
+      }
+      res.status(200).json({
+        message: "delete user",
+        success: true,
+        result,
+      });
+    })
+    .catch((err) => {
+      console.log("Error:", err);
+      res.status(500).json({
+        message: "delete user",
+        success: false,
+        errer: err,
       });
     });
 };
